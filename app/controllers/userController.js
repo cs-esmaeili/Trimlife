@@ -5,13 +5,9 @@ const Token = require("../database/models/Token");
 
 exports.handleLogin = async (req, res, next) => {
     try {
-       // await User.logInValidation(req.body);
+        await User.logInValidation(req.body);
         const { email, password, phoneNumber } = await req.body;
-        await console.log(email, password, phoneNumber);
-        const user = await User.findOne({ password,  $or: [{ email }, { phoneNumber }] });
-        console.log("user = " + user);
-
-
+        const user = await User.findOne({ password, $or: [{ email }, { phoneNumber }] });
         if (!user) {
             const error = new Error();
             error.message = "نام کاربری یا رمز عبور نادرست می باشد";
@@ -28,7 +24,7 @@ exports.handleLogin = async (req, res, next) => {
         }
         res.json(token);
     } catch (err) {
-        res.status(err.statusCode || 422).json(err.message);
+        res.status(err.statusCode || 422).json(err.errors || err.message);
     }
 }
 

@@ -1,10 +1,9 @@
-const connectDB = require('../../config/db');
+const { connectDB } = require('../../config/database');
 const migration = require('./models/');
 const seed = require('./seeders');
 
-exports.connect = () => {
-    connectDB();
-    migration().then(() => {
-        seed();
-    });
+exports.connect = async () => {
+    await connectDB();
+    await migration();
+    await seed();
 }

@@ -1,7 +1,7 @@
 const { createLogger, format, transports } = require('winston');
 const appRoot = require("app-root-path");
-// Import mongodb
 require('winston-mongodb');
+const { uri } = require('./database');
 
 
 const options = {
@@ -15,7 +15,7 @@ const options = {
     },
     collection_system: {
         level: 'info',
-        db: process.env.MONGODBURI,
+        db: uri,
         options: {
             useUnifiedTopology: true
         },
@@ -26,7 +26,7 @@ const options = {
     },
     collection_user: {
         level: 'info',
-        db: process.env.MONGODBURI,
+        db: uri,
         options: {
             useUnifiedTopology: true
         },
@@ -37,7 +37,7 @@ const options = {
     },
     collection_admin: {
         level: 'info',
-        db: process.env.MONGODBURI,
+        db: uri,
         options: {
             useUnifiedTopology: true
         },

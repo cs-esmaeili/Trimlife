@@ -8,8 +8,6 @@ const morgan = require("morgan");
 const { connect } = require('./app/database');
 const app = express();
 
-
-
 connect();
 
 //* BodyPaser
