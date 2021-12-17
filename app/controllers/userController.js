@@ -28,6 +28,39 @@ exports.handleLogin = async (req, res, next) => {
     }
 }
 
-exports.handleSingUp = async (req, res, next) => {
-
+exports.handleRegister = async (req, res, next) => {
+    try {
+        await User.registerValidation(req.body);
+        const { email, userName, password } = await req.body;
+        let user = await User.findOne({ email });
+        if (user) {
+            const error = new Error();
+            error.message = "حساب کاربری با این مشخصات وجود دارد";
+            error.statusCode = 422;
+            throw error;
+        }
+        user = await User.findOne({ "userName.name": userName }).sort({ "userName.tag": -1 }).limit(1);
+        let tag = (user !== null ? user.userName.tag : null);
+        if (user) {
+            if (tag === 9999) {
+                const error = new Error();
+                error.message = "نام کاربری  وجود دارد";
+                error.statusCode = 422;
+                throw error;
+            }
+        }
+        tag = (tag === null ? 1000 : (tag + 1));
+        let token = await createToken({ test: "test" }, "1h");
+        let result = await Token.create({ token });
+        result = await User.create(
+            {
+                token_id: result._id,
+                userName: { name: userName, tag }
+                , password
+                , email
+            });
+        res.json(result);
+    } catch (err) {
+        res.status(err.statusCode || 422).json(err.errors || err.message);
+    }
 }

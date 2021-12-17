@@ -1,16 +1,20 @@
 const mongoose = require("mongoose");
-const { schema } = require("./validations/logInValidation");
-
+const { schema: logIn } = require("./validations/logInValidation");
+const { schema: register } = require("./validations/registerValidation");
 const userNameSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
         trim: true,
+        max: 50,
+        min: 4,
     },
     tag: {
-        type: String,
+        type: Number,
         required: true,
         trim: true,
+        max: 9999,
+        min: 1000,
     }
 });
 userNameSchema.index({ name: 1, tag: 1 }, { unique: true });
@@ -23,7 +27,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         max: 50,
-        ming: 4,
+        min: 4,
         required: true,
         trim: true,
     },
@@ -36,11 +40,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        trim: true,
     },
     phoneNumber: {
         type: String,
-        max: 11,
+        trim: true,
+        index: true,
         unique: true,
+        sparse: true,
     },
     image: {
         type: String,
@@ -60,8 +67,13 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+
 userSchema.statics.logInValidation = function (body) {
-    return schema.validate(body, { abortEarly: false });
+    return logIn.validate(body, { abortEarly: false });
+};
+
+userSchema.statics.registerValidation = function (body) {
+    return register.validate(body, { abortEarly: false });
 };
 
 module.exports = mongoose.model("User", userSchema);
