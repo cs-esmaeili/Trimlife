@@ -3,17 +3,21 @@ const colors = require('colors');
 const fs = require('fs');
 const path = require('path');
 const basename = path.basename(__filename);
-
-const seed =  () => {
-  fs
+let seeders = [];
+const seed = async () => {
+  await fs
     .readdirSync(__dirname)
     .filter(file => {
       return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
     })
     .forEach(file => {
-      const model = require(path.join(__dirname, file));
+      const seeder = require(path.join(__dirname, file));
+      seeders.push(seeder);
     });
-  console.log(colors.green(`documents added`));
+  seeders = seeders.sort((a, b) => (a.seqNumber > b.seqNumber) ? 1 : ((b.seqNumber > a.seqNumber) ? -1 : 0));
+  for (i = 0; i < seeders.length; i++) {
+    await seeders[i].seed();
+  }
 
 }
 

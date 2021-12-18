@@ -23,4 +23,4 @@ const userLogSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("User_Log", userLogSchema);
+module.exports = mongoose.model("User_Log", userLogSchema , 'user_logs');

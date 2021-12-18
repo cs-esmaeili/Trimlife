@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 
-const tokenSchema = new mongoose.Schema({
-    token: {
+const serverPermissionsSchema = new mongoose.Schema({
+    name: {
         type: String,
         required: true,
-        max: 255,
-    },
-    meta: {
-        type: String,
+        max: 50,
     },
     createdAt: {
         type: Date,
@@ -19,4 +16,4 @@ const tokenSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Token", tokenSchema , 'tokens');
+module.exports = mongoose.model("ServerPermissions", serverPermissionsSchema , 'serverPermissions');

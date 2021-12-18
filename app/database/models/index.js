@@ -17,7 +17,6 @@ fs
   });
 
 const migration = async () => {
-  console.log('migration');
   if (process.env.NODE_ENV === "development") {
     models.map(async (value) => {
       await value.deleteMany({});

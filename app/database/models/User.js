@@ -76,4 +76,4 @@ userSchema.statics.registerValidation = function (body) {
     return register.validate(body, { abortEarly: false });
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema, 'users');
