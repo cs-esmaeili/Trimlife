@@ -14,8 +14,8 @@ const seed = async () => {
       const seeder = require(path.join(__dirname, file));
       seeders.push(seeder);
     });
-  seeders = seeders.sort((a, b) => (a.seqNumber > b.seqNumber) ? 1 : ((b.seqNumber > a.seqNumber) ? -1 : 0));
-  for (i = 0; i < seeders.length; i++) {
+    seeders = seeders.sort((a, b) => (a.seqNumber > b.seqNumber) ? 1 : ((b.seqNumber > a.seqNumber) ? -1 : 0));
+    for (i = 0; i < seeders.length; i++) {
     await seeders[i].seed();
   }
 

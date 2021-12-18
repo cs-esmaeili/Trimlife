@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 
-const serverPermissionsSchema = new mongoose.Schema({
+const categorySchemaSchema = new mongoose.Schema({
+    channels: [{ type: mongoose.ObjectId }],
+    permissions: [{ type: mongoose.ObjectId }],
     name: {
         type: String,
         required: true,
+        trim: true,
         max: 50,
     },
     createdAt: {
@@ -16,4 +19,4 @@ const serverPermissionsSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("ServerPermissions", serverPermissionsSchema , 'serverPermissions');
+module.exports = mongoose.model("Category", categorySchemaSchema, 'category');

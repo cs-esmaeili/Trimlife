@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const adminLogSchema = new mongoose.Schema({
+const systemLogSchema = new mongoose.Schema({
     time: {
         type: Date,
         required: true,
@@ -23,4 +23,4 @@ const adminLogSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Admin_Log", adminLogSchema , 'admin_logs');
+module.exports = mongoose.model("SystemLog", systemLogSchema , 'systemLog');

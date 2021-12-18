@@ -19,7 +19,7 @@ const options = {
         options: {
             useUnifiedTopology: true
         },
-        collection: 'system_logs',
+        collection: 'systemLog',
         format: format.combine(
             format.timestamp(),
             format.json())
@@ -30,7 +30,7 @@ const options = {
         options: {
             useUnifiedTopology: true
         },
-        collection: 'user_logs',
+        collection: 'userLog',
         format: format.combine(
             format.timestamp(),
             format.json())
@@ -41,7 +41,7 @@ const options = {
         options: {
             useUnifiedTopology: true
         },
-        collection: 'admin_logs',
+        collection: 'adminLog',
         format: format.combine(
             format.timestamp(),
             format.json())

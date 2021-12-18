@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
-const serverSchema = new mongoose.Schema({
-    users: [{ type: mongoose.ObjectId }],
-    roles: [{ type: mongoose.ObjectId }],
-    name: {
+const messageSchema = new mongoose.Schema({
+    channel_id: { type: mongoose.ObjectId },
+    From: { type: mongoose.ObjectId },
+    To: { type: mongoose.ObjectId },
+    body: {
         type: String,
         required: true,
         trim: true,
-        max: 50,
     },
     createdAt: {
         type: Date,
@@ -19,4 +19,4 @@ const serverSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Server", serverSchema , 'server');
+module.exports = mongoose.model("Message", messageSchema, 'message');
