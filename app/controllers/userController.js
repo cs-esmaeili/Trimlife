@@ -14,15 +14,23 @@ exports.handleLogin = async (req, res, next) => {
             error.statusCode = 422;
             throw error;
         }
+        if (user.socket_id != null) {
+            const socket = await global.userNamespace.fetchSockets();
+            socket.map((value) => {
+                if (value.id === user.socket_id) {
+                    value.disconnect();
+                }
+            });
+        }
         const token = await createToken(JSON.parse(JSON.stringify(user)), "1h");
         const result = await Token.updateOne({ _id: user.token_id }, { token });
-        if (!result.modifiedCount == 1) {
+        if (!result.modifiedCount === 1) {
             const error = new Error();
             error.message = "مشکلی در وارد شدن به وجود آمد دوباره تلاش کنید";
             error.statusCode = 500;
             throw error;
         }
-        res.json(token);
+        res.send(token);
     } catch (err) {
         res.status(err.statusCode || 422).json(err.errors || err.message);
     }

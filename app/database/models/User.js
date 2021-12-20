@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     token_id: {
         type: mongoose.ObjectId
     },
+    socket_id: {
+        type: String,
+        required: false,
+    },
     userName: userNameSchema,
     password: {
         type: String,

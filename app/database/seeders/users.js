@@ -1,14 +1,15 @@
 const { createToken } = require("../../utils/token");
 const User = require("../models/User");
 const Token = require("../models/Token");
-const { green  , red} = require('colors');
+const { green, red } = require('colors');
 
 const seqNumber = 1;
 const seed = async () => {
     let token = await createToken({ test: "test" }, "1h");
-    let result = await Token.create({ token });
+    let result = await Token.create({ token: '1' });
     await User.create({
         token_id: result._id,
+        socket_id: null,
         userName: { name: "javad", tag: "1000" }
         , password: "1010"
         , Biography: "manjavadam"
@@ -16,9 +17,10 @@ const seed = async () => {
         , phoneNumber: "09137378601"
     });
     token = await createToken({ test: "test" }, "1h");
-    result = await Token.create({ token });
+    result = await Token.create({ token : '2' });
     await User.create({
         token_id: result._id,
+        socket_id: null,
         userName: { name: "javad", tag: "1001" }
         , password: "1010"
         , Biography: "manjavadam"

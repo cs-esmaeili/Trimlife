@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema({
     channel_id: { type: mongoose.ObjectId },
-    From: { type: mongoose.ObjectId },
-    To: { type: mongoose.ObjectId },
+    from: { type: mongoose.ObjectId },
+    to: { type: mongoose.ObjectId },
     body: {
         type: String,
         required: true,
