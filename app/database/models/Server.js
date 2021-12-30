@@ -1,8 +1,21 @@
 const mongoose = require("mongoose");
 
 const serverSchema = new mongoose.Schema({
-    users: [{ type: mongoose.ObjectId }],
-    roles: [{ type: mongoose.ObjectId }],
+    users: {
+        type: [mongoose.ObjectId],
+        ref: 'User',
+        validate: v => Array.isArray(v) && v.length > 0,
+    },
+    roles: {
+        type: [mongoose.ObjectId],
+        ref: 'ServerRole',
+        validate: v => Array.isArray(v) && v.length > 0,
+    },
+    list: {
+        type: [mongoose.ObjectId],
+        ref: 'Category',
+        validate: v => Array.isArray(v) && v.length > 0,
+    },
     name: {
         type: String,
         required: true,
@@ -19,4 +32,5 @@ const serverSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Server", serverSchema , 'server');
+
+module.exports = mongoose.model("Server", serverSchema, 'server');

@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
 
 const categorySchemaSchema = new mongoose.Schema({
-    channels: [{ type: mongoose.ObjectId }],
-    permissions: [{ type: mongoose.ObjectId }],
+    channels: {
+        type: [mongoose.ObjectId],
+        ref: 'Channel',
+        validate: v => Array.isArray(v) && v.length > 0,
+    },
+    permissions: {
+        type: [mongoose.ObjectId],
+        validate: v => Array.isArray(v) && v.length > 0,
+    },
     name: {
         type: String,
         required: true,

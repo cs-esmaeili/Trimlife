@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 
 const channelSchema = new mongoose.Schema({
-    category_id: { type: mongoose.ObjectId },
-    serverSchema_id: { type: mongoose.ObjectId },
-    permissions: [{ type: mongoose.ObjectId }],
+    permissions: {
+        type: [mongoose.ObjectId],
+        validate: v => Array.isArray(v) && v.length > 0,
+    },
     name: {
         type: String,
         required: true,

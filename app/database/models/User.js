@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { schema: logIn } = require("./validations/logInValidation");
 const { schema: register } = require("./validations/registerValidation");
+const Server = require("./Server");
+
 const userNameSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -79,5 +81,14 @@ userSchema.statics.logInValidation = function (body) {
 userSchema.statics.registerValidation = function (body) {
     return register.validate(body, { abortEarly: false });
 };
+
+
+userSchema.statics.userChannels = async function (token_id) {
+    const user = await this.findOne({ token_id });
+    const userChannels = await Server.find({ users: { $in: [user._id] } }).populate({path: "list" , populate : {path : "channels"}}).select("list");
+
+    return userChannels;
+};
+
 
 module.exports = mongoose.model("User", userSchema, 'user');
