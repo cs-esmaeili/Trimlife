@@ -1,9 +1,22 @@
 const mongoose = require("mongoose");
 
 const channelSchema = new mongoose.Schema({
-    permissions: {
-        type: [mongoose.ObjectId],
-        validate: v => Array.isArray(v) && v.length > 0,
+    rolesException: {
+        type: [{
+            role_id: {
+                type: mongoose.ObjectId,
+                ref: 'ServerRole',
+            },
+            permission_id: {
+                type: mongoose.ObjectId,
+                ref: 'ServerPermission',
+            },
+            status: {
+                type: Boolean,
+                default: "false",
+            }
+        }],
+        validate: v => Array.isArray(v),
     },
     name: {
         type: String,

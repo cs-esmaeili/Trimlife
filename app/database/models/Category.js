@@ -6,9 +6,22 @@ const categorySchemaSchema = new mongoose.Schema({
         ref: 'Channel',
         validate: v => Array.isArray(v) && v.length > 0,
     },
-    permissions: {
-        type: [mongoose.ObjectId],
-        validate: v => Array.isArray(v) && v.length > 0,
+    rolesException: {
+        type: [{
+            role_id: {
+                type: mongoose.ObjectId,
+                ref: 'ServerRole',
+            },
+            permission_id: {
+                type: mongoose.ObjectId,
+                ref: 'ServerPermission',
+            },
+            status: {
+                type: Boolean,
+                default: "false",
+            }
+        }],
+        validate: v => Array.isArray(v),
     },
     name: {
         type: String,
@@ -25,5 +38,9 @@ const categorySchemaSchema = new mongoose.Schema({
         default: Date.now,
     },
 });
+// {
+//     role_id : 20,
+//     permission_id : 2
+// }
 
 module.exports = mongoose.model("Category", categorySchemaSchema, 'category');

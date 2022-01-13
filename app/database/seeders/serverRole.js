@@ -7,10 +7,10 @@ const seed = async () => {
     const result = await ServerPermission.find();
     let ids = [];
     await result.forEach(element => {
-        ids.push(element._id);
+        ids.push({permission_id: element._id });
     });
-    await ServerRole.create({ permissions: ids, name: 'testRole1' });
-    await ServerRole.create({ permissions: ids, name: 'testRole2' });
+    await ServerRole.create({ permissions: ids, name: 'everyone' });
+    await ServerRole.create({ permissions: ids, name: 'admin' });
     await console.log(`${red(seqNumber)} : ${green('ServerRole seed done')}`);
 }
 
