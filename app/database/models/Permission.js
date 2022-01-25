@@ -1,16 +1,15 @@
 const mongoose = require("mongoose");
 const { boolean } = require("yup");
 
-const serverPermissionSchema = new mongoose.Schema({
+const permissionSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
         max: 50,
     },
     type: {
-        type: Boolean,
+        type: String,
         required: true,
-        default: 0,
     },
     description: {
         type: String,
@@ -26,4 +25,4 @@ const serverPermissionSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("ServerPermission", serverPermissionSchema, 'serverPermission');
+module.exports = mongoose.model("Permission", permissionSchema, 'permission');

@@ -1,17 +1,17 @@
 const Channel = require('../models/Channel');
-const ServerPermission = require('../models/ServerPermission');
-const ServerRole = require('../models/ServerRole');
+const Permission = require('../models/Permission');
+const Role = require('../models/Role');
 const { green, red } = require('colors');
 const _ = require('lodash');
 
 const seqNumber = 4;
 const seed = async () => {
-    const result1 = await ServerRole.find();
+    const result1 = await Role.find();
     let roles = [];
     await result1.forEach(element => {
         roles.push(element._id);
     });
-    const result2 = await ServerPermission.find();
+    const result2 = await Permission.find();
     let permissions = [];
     await result2.forEach(element => {
         permissions.push({ role_id: roles[0]._id, permission_id: element._id, status: _.sample([true, false]) });

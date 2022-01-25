@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const categorySchemaSchema = new mongoose.Schema({
+const categorySchema = new mongoose.Schema({
     channels: {
         type: [mongoose.ObjectId],
         ref: 'Channel',
@@ -43,4 +43,4 @@ const categorySchemaSchema = new mongoose.Schema({
 //     permission_id : 2
 // }
 
-module.exports = mongoose.model("Category", categorySchemaSchema, 'category');
+module.exports = mongoose.model("Category", categorySchema, 'category');

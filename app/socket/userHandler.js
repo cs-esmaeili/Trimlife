@@ -2,6 +2,7 @@ const Message = require('../database/models/Message');
 const Token = require('../database/models/Token');
 const Server = require("../database/models/Server");
 const User = require("../database/models/User");
+const { checkServerPermission } = require("../utils/user");
 
 
 exports.joinRooms = async (io, socket, nameSpace) => {
@@ -10,12 +11,12 @@ exports.joinRooms = async (io, socket, nameSpace) => {
   const userChannels = await User.userChannels(tokenObj._id);
 
   // console.log(userChannels);
-  userChannels.map((value) => {
-    value.list.map((value) => {
-      console.log(value.channels);
-    });
-    console.log("...............");
-  });
+  // userChannels.map((value) => {
+  //   value.list.map((value) => {
+  //     console.log(value.channels);
+  //   });
+  //   console.log("...............");
+  // });
   // Server.userChannels('')
 }
 
@@ -31,6 +32,12 @@ exports.privateMessage = (io, socket, nameSpace) => {
   socket.on(EventName, privateMessage);
 }
 
-exports.channelMessage = (io, socket, nameSpace) => {
-
+exports.channelsList = async (io, socket, nameSpace) => {
+  const EventName = 'channelsList';
+  const result = await checkServerPermission(socket.id, '61f028ef5ed7c0aa2fbfeedc', '61f028ef5ed7c0aa2fbfedb7');
+  console.log(result);
+  const channelsList = (payload) => {
+    console.log(socket);
+  }
+  socket.on(EventName, channelsList);
 }

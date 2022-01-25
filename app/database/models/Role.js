@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const serverRoleSchema = new mongoose.Schema({
+const roleSchema = new mongoose.Schema({
     permissions: {
         type: [{
             permission_id: {
                 type: mongoose.ObjectId,
-                ref: 'ServerPermission',
+                ref: 'Permission',
                 required: true,
             },
             status: {
@@ -30,4 +30,4 @@ const serverRoleSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("ServerRole", serverRoleSchema, 'serverRole');
+module.exports = mongoose.model("Role", roleSchema, 'role');

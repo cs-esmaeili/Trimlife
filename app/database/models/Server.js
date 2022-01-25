@@ -8,7 +8,20 @@ const serverSchema = new mongoose.Schema({
     },
     roles: {
         type: [mongoose.ObjectId],
-        ref: 'ServerRole',
+        ref: 'Role',
+        validate: v => Array.isArray(v) && v.length > 0,
+    },
+    usersRoles: {
+        type: [{
+            user_id: {
+                type: mongoose.ObjectId,
+                ref: 'User',
+            },
+            role_id: {
+                type: mongoose.ObjectId,
+                ref: 'Role',
+            },
+        }],
         validate: v => Array.isArray(v) && v.length > 0,
     },
     list: {
