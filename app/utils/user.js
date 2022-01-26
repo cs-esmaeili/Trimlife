@@ -1,6 +1,8 @@
 const User = require('../database/models/User');
 const Server = require('../database/models/Server');
 const Role = require('../database/models/Role');
+const Channel = require('../database/models/Channel');
+const Category = require('../database/models/Category');
 
 exports.socketIdToUserId = async (socketId) => {
     const result = await User.findOne({ socketId });
@@ -35,7 +37,36 @@ exports.checkServerPermission = async (socketId, serverId, permissionId) => {
     }
     return false;
 }
-exports.checkVoiceChannelPermission = async (socketId, serverId, channelId, permissionId) => { //TODO
+exports.checkChannelPermission = async (socketId, serverId, channelId, permissionId) => {
     const userId = await this.socketIdToUserId(socketId);
     const userRoles = await this.userRolesInServer(userId._id, serverId);
+    const channel = await Channel.findOne({
+        _id: channelId,
+        "rolesException.role_id": { "$in": userRoles },
+        "rolesException.permission_id": permissionId,
+    }).populate({ path: "rolesException.permission_id" });
+    if (channel != null) {
+        for (let i = 0; i < channel.rolesException.length; i++) {
+            if (channel.rolesException[i].status == true) {
+                return true;
+            }
+        }
+        return false;
+    } else {
+        const category = await Category.findOne({
+            channels: channelId,
+            "rolesException.role_id": { "$in": userRoles },
+            "rolesException.permission_id": permissionId,
+        });
+        if (category != null) {
+            for (let i = 0; i < category.rolesException.length; i++) {
+                if (category.rolesException[i].status == true) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

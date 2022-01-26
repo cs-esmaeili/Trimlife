@@ -14,7 +14,7 @@ const categorySchema = new mongoose.Schema({
             },
             permission_id: {
                 type: mongoose.ObjectId,
-                ref: 'ServerPermission',
+                ref: 'Permission',
             },
             status: {
                 type: Boolean,

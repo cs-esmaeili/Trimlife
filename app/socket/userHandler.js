@@ -2,7 +2,7 @@ const Message = require('../database/models/Message');
 const Token = require('../database/models/Token');
 const Server = require("../database/models/Server");
 const User = require("../database/models/User");
-const { checkServerPermission } = require("../utils/user");
+const { checkChannelPermission } = require("../utils/user");
 
 
 exports.joinRooms = async (io, socket, nameSpace) => {
@@ -34,7 +34,12 @@ exports.privateMessage = (io, socket, nameSpace) => {
 
 exports.channelsList = async (io, socket, nameSpace) => {
   const EventName = 'channelsList';
-  const result = await checkServerPermission(socket.id, '61f028ef5ed7c0aa2fbfeedc', '61f028ef5ed7c0aa2fbfedb7');
+  const result = await checkChannelPermission(
+    socket.id,
+    '61f15929ed6382eddc3487e7',
+    '61f15928ed6382eddc348727',
+    '61f15928ed6382eddc34869c');
+
   console.log(result);
   const channelsList = (payload) => {
     console.log(socket);
