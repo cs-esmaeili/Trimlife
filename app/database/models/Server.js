@@ -35,6 +35,9 @@ const serverSchema = new mongoose.Schema({
         trim: true,
         max: 50,
     },
+    image: {
+        type: String,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

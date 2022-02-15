@@ -2,47 +2,47 @@ const Message = require('../database/models/Message');
 const Token = require('../database/models/Token');
 const Server = require("../database/models/Server");
 const User = require("../database/models/User");
-const { checkChannelPermission } = require("../utils/user");
+const { socketIdToUserId, userServers, checkServerPermission, permissionToPermissionId, removeFalsePermissins } = require("../utils/user");
 
 
-exports.joinRooms = async (io, socket, nameSpace) => {
-  const token = await socket.handshake.headers.token;
-  const tokenObj = await Token.findOne({ token });
-  const userChannels = await User.userChannels(tokenObj._id);
-
-  // console.log(userChannels);
-  // userChannels.map((value) => {
-  //   value.list.map((value) => {
-  //     console.log(value.channels);
-  //   });
-  //   console.log("...............");
-  // });
-  // Server.userChannels('')
-}
-
-exports.privateMessage = (io, socket, nameSpace) => {
-
-  const EventName = 'privateMessage';
-
-  const privateMessage = (payload) => {
-    const { from, to, body } = payload;
-    Message.create({ from, to, body });
-    nameSpace.to(payload.target_socket_id).emit(EventName, payload.body);
+exports.serversList = (io, socket, nameSpace) => {
+  const EventName = 'serversList';
+  const serversList = async (payload) => {
+    const userId = await socketIdToUserId(socket.id);
+    const servers = await userServers(userId);
+    nameSpace.to(socket.id).emit(EventName, servers);
   }
-  socket.on(EventName, privateMessage);
+  socket.on(EventName, serversList);
 }
+
 
 exports.channelsList = async (io, socket, nameSpace) => {
   const EventName = 'channelsList';
-  const result = await checkChannelPermission(
-    socket.id,
-    '61f15929ed6382eddc3487e7',
-    '61f15928ed6382eddc348727',
-    '61f15928ed6382eddc34869c');
-
-  console.log(result);
-  const channelsList = (payload) => {
-    console.log(socket);
+  const channelsList = async (payload) => {
+    const userId = await socketIdToUserId(socket.id);
+    const serverId = payload.serverId;
+    const viewChannelsPermission = await permissionToPermissionId('View Channels');
+    const viewChannelPermission = await permissionToPermissionId('View Channel');
+    const checkUserServerPermission = await checkServerPermission(socket.id, serverId, viewChannelsPermission._id);
+    if (checkUserServerPermission) {
+      const server = await Server.findOne({ _id: serverId, users: userId })
+        .populate({ path: "list", populate: { path: "channels" } }).lean();
+      let list = server.list;
+      let filters = [];
+      for (let i = 0; i < list.length; i++) {
+        let category = list[i];
+        const fillterdChannels = await removeFalsePermissins(socket.id, serverId, viewChannelPermission._id, category.channels);
+        if (fillterdChannels.length == 0) {
+          filters.push(false);
+        }
+        category.channels = fillterdChannels;
+        filters.push(true);
+      }
+      result = await list.filter((value, index) => filters[index]);
+      nameSpace.to(socket.id).emit(EventName, result);
+    } else {
+      nameSpace.to(socket.id).emit(EventName, []);
+    }
   }
   socket.on(EventName, channelsList);
 }

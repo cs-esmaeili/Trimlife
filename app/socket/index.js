@@ -1,4 +1,4 @@
-const { privateMessage, channelsList, joinRooms } = require("./userHandler");
+const { serversList  , channelsList} = require("./userHandler");
 const userLogIn = require("../middlewares/socket/userLogIn");
 const { Server } = require("socket.io");
 
@@ -15,10 +15,8 @@ const initialize = (server) => {
 
   const onConnection = async (socket) => {
     await console.log('user connected = ' + socket.id);
-    await joinRooms(io, socket, userNamespace);
-    await privateMessage(io, socket, userNamespace);
+    await serversList(io, socket, userNamespace);
     await channelsList(io, socket, userNamespace);
-
   }
 
   userLogIn(io, userNamespace); // middleware

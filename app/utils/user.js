@@ -3,7 +3,13 @@ const Server = require('../database/models/Server');
 const Role = require('../database/models/Role');
 const Channel = require('../database/models/Channel');
 const Category = require('../database/models/Category');
+const Permission = require('../database/models/Permission');
+const { remove } = require('lodash');
 
+exports.permissionToPermissionId = async (permission) => {
+    const result = await Permission.findOne({ name: permission });
+    return result;
+}
 exports.socketIdToUserId = async (socketId) => {
     const result = await User.findOne({ socketId });
     return result;
@@ -17,6 +23,10 @@ exports.userRolesInServer = async (userId, serverId) => {
         }
     })
     return rolesId;
+}
+exports.userServers = async (userId) => {
+    const result = await Server.find({ users: userId });
+    return result;
 }
 exports.rolesPermissions = async (roleIds) => {
     const result = await Role.find({ _id: { "$in": roleIds } })
@@ -70,3 +80,13 @@ exports.checkChannelPermission = async (socketId, serverId, channelId, permissio
         }
     }
 }
+
+exports.removeFalsePermissins = async (socketId, serverId, permissionId, array) => {
+    let result = await Promise.all(array.map(async item => {
+        const check = await this.checkChannelPermission(socketId, serverId, item._id, permissionId);
+        return check;
+    }));
+    result = await array.filter((value, index) => result[index]);
+    return result;
+}
+

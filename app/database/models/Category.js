@@ -38,9 +38,5 @@ const categorySchema = new mongoose.Schema({
         default: Date.now,
     },
 });
-// {
-//     role_id : 20,
-//     permission_id : 2
-// }
 
 module.exports = mongoose.model("Category", categorySchema, 'category');

@@ -1,8 +1,6 @@
 const { createLogger, format, transports } = require('winston');
-const appRoot = require("app-root-path");
-require('winston-mongodb');
 const { uri } = require('./database');
-
+require('winston-mongodb');
 
 const options = {
     console: {

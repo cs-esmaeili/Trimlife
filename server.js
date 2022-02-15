@@ -3,7 +3,7 @@ const http = require("http");
 const express = require('express');
 const dotEnv = require('dotenv');
 dotEnv.config({ path: "./config/config.env" });
-const winston = require("./config/winston");
+// const winston = require("./config/winston");
 const morgan = require("morgan");
 const { connect } = require('./app/database');
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 //* Logging
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan("combined", { stream: winston.systemlogger.stream }));
+  // app.use(morgan("combined", { stream: winston.systemlogger.stream }));
 }
 //* Routes
 app.use("/users", require("./app/routes/users"));

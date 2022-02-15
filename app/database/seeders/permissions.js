@@ -4,7 +4,7 @@ const { green, red } = require('colors');
 const seqNumber = 2;
 const seed = async () => {
     //General  Server permissions
-    await Permission.create({ name: 'View Channels', type: "Server" });
+    await Permission.create({ name: 'View Channels', type: "Server" });//TODO
     await Permission.create({ name: 'Manage Channels', type: "Server" });
     await Permission.create({ name: 'Manage Roles', type: "Server" });
     await Permission.create({ name: 'View Logs', type: "Server" });
@@ -14,7 +14,7 @@ const seed = async () => {
     await Permission.create({ name: 'Ban Memebers', type: "Server" });
     await Permission.create({ name: 'Move Members', type: "Server" });
     //General channel Permission
-    await Permission.create({ name: 'View Channel', type: "GeneralChannel" });
+    await Permission.create({ name: 'View Channel', type: "GeneralChannel" });//TODO
     await Permission.create({ name: 'Manage Channel', type: "GeneralChannel" });
     await Permission.create({ name: 'Manage Permissions', type: "GeneralChannel" });
     //voice channel permission

@@ -9,7 +9,7 @@ const uri = `mongodb://${username}:${password}@${clusterUrl}/${process.env.DB_DA
 
 const connectDB = async () => {
     try {
-        const result = await mongoose.connect(uri)
+        const result = await mongoose.connect(uri);
         console.log('Connected To Database');
     } catch (e) {
         console.log(e);

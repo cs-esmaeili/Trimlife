@@ -22,7 +22,7 @@ const seed = async () => {
     });
 
     await Category.create({ channels: [channel_id[0]._id], rolesException: permissions , name : "CategoryTest 1"});
-    await Category.create({ channels: [channel_id[1]._id], rolesException: [] , name : "CategoryTest 2"});
+    await Category.create({ channels: [channel_id[1]._id], rolesException: permissions , name : "CategoryTest 2"});
     await console.log(`${red(seqNumber)} : ${green('Category seed done')}`);
 }
 
