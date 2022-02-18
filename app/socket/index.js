@@ -1,4 +1,4 @@
-const { serversList  , channelsList} = require("./userHandler");
+const { serversList, channelsList, serversRoles, usersOnChannel } = require("./userHandler");
 const userLogIn = require("../middlewares/socket/userLogIn");
 const { Server } = require("socket.io");
 
@@ -17,6 +17,8 @@ const initialize = (server) => {
     await console.log('user connected = ' + socket.id);
     await serversList(io, socket, userNamespace);
     await channelsList(io, socket, userNamespace);
+    await serversRoles(io, socket, userNamespace);
+    await usersOnChannel(io, socket, userNamespace);
   }
 
   userLogIn(io, userNamespace); // middleware

@@ -10,6 +10,7 @@ const seed = async () => {
     await User.create({
         token_id: result._id,
         socket_id: null,
+        image: 'test1',
         userName: { name: "javad", tag: "1000" }
         , password: "1010"
         , Biography: "manjavadam"
@@ -21,6 +22,7 @@ const seed = async () => {
     await User.create({
         token_id: result._id,
         socket_id: null,
+        image: 'test2',
         userName: { name: "javad", tag: "1001" }
         , password: "1010"
         , Biography: "manjavadam"

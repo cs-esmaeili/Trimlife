@@ -29,6 +29,11 @@ const categorySchema = new mongoose.Schema({
         trim: true,
         max: 50,
     },
+    isPrivate: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

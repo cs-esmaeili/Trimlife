@@ -11,11 +11,20 @@ exports.permissionToPermissionId = async (permission) => {
     return result;
 }
 exports.socketIdToUserId = async (socketId) => {
-    const result = await User.findOne({ socketId });
+    const result = await User.findOne({ socket_id: socketId });
+    return result;
+}
+exports.userIdToSocketId = async (userId) => {
+    const result = await User.findOne({ _id: userId });
     return result;
 }
 exports.userRolesInServer = async (userId, serverId) => {
     const result = await Server.findOne({ _id: serverId, userRoles: { "user_id": userId } }).select({ usersRoles: 1 });
+    // console.log('//////////////////');
+    // console.log(userId, serverId);
+    // console.log('***');
+    // console.log(result);
+    // console.log('//////////////////');
     let rolesId = [];
     result.usersRoles.map((item) => {
         if (item.user_id.equals(userId)) {
@@ -55,6 +64,7 @@ exports.checkChannelPermission = async (socketId, serverId, channelId, permissio
         "rolesException.role_id": { "$in": userRoles },
         "rolesException.permission_id": permissionId,
     }).populate({ path: "rolesException.permission_id" });
+
     if (channel != null) {
         for (let i = 0; i < channel.rolesException.length; i++) {
             if (channel.rolesException[i].status == true) {
@@ -63,11 +73,12 @@ exports.checkChannelPermission = async (socketId, serverId, channelId, permissio
         }
         return false;
     } else {
-        const category = await Category.findOne({
+        const category = await Category.findOne({//TODO
             channels: channelId,
             "rolesException.role_id": { "$in": userRoles },
             "rolesException.permission_id": permissionId,
         });
+        
         if (category != null) {
             for (let i = 0; i < category.rolesException.length; i++) {
                 if (category.rolesException[i].status == true) {
