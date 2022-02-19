@@ -4,7 +4,6 @@ const Role = require('../database/models/Role');
 const Channel = require('../database/models/Channel');
 const Category = require('../database/models/Category');
 const Permission = require('../database/models/Permission');
-const { remove } = require('lodash');
 
 exports.permissionToPermissionId = async (permission) => {
     const result = await Permission.findOne({ name: permission });
@@ -20,11 +19,6 @@ exports.userIdToSocketId = async (userId) => {
 }
 exports.userRolesInServer = async (userId, serverId) => {
     const result = await Server.findOne({ _id: serverId, userRoles: { "user_id": userId } }).select({ usersRoles: 1 });
-    // console.log('//////////////////');
-    // console.log(userId, serverId);
-    // console.log('***');
-    // console.log(result);
-    // console.log('//////////////////');
     let rolesId = [];
     result.usersRoles.map((item) => {
         if (item.user_id.equals(userId)) {
@@ -56,42 +50,44 @@ exports.checkServerPermission = async (socketId, serverId, permissionId) => {
     }
     return false;
 }
+const checkcollection = (collection, userRoles, permissionId) => {
+    const { rolesException } = collection;
+    for (let i = 0; i < rolesException.length; i++) {
+
+        const roleCheck = userRoles.some(function (el) {
+            return el.equals(rolesException[i].role_id);
+        });
+        if (roleCheck && rolesException[i].permission_id.equals(permissionId)) {
+            return rolesException[i].status;
+        }
+    }
+    return undefined;
+}
 exports.checkChannelPermission = async (socketId, serverId, channelId, permissionId) => {
     const userId = await this.socketIdToUserId(socketId);
     const userRoles = await this.userRolesInServer(userId._id, serverId);
+
     const channel = await Channel.findOne({
         _id: channelId,
-        "rolesException.role_id": { "$in": userRoles },
-        "rolesException.permission_id": permissionId,
-    }).populate({ path: "rolesException.permission_id" });
-
-    if (channel != null) {
-        for (let i = 0; i < channel.rolesException.length; i++) {
-            if (channel.rolesException[i].status == true) {
-                return true;
-            }
-        }
-        return false;
+    });
+    const checkChannel = checkcollection(channel, userRoles, permissionId);
+    if (checkChannel !== undefined) {
+        return checkChannel;
     } else {
-        const category = await Category.findOne({//TODO
+        const category = await Category.findOne({
             channels: channelId,
-            "rolesException.role_id": { "$in": userRoles },
-            "rolesException.permission_id": permissionId,
         });
-        
-        if (category != null) {
-            for (let i = 0; i < category.rolesException.length; i++) {
-                if (category.rolesException[i].status == true) {
-                    return true;
-                }
-            }
-            return false;
+        const checkCategory = checkcollection(category, userRoles, permissionId);
+        if (checkCategory !== undefined) {
+            return checkCategory;
         } else {
-            return true;
+            if (channel.isPrivate == false) {
+                return !category.isPrivate;
+            }
+            return !channel.isPrivate;
         }
     }
 }
-
 exports.removeFalsePermissins = async (socketId, serverId, permissionId, array) => {
     let result = await Promise.all(array.map(async item => {
         const check = await this.checkChannelPermission(socketId, serverId, item._id, permissionId);

@@ -24,8 +24,8 @@ exports.serversList = (io, socket, nameSpace) => {
 exports.channelsList = async (io, socket, nameSpace) => {
   const EventName = 'channelsList';
   const channelsList = async (payload) => {
+    const { serverId } = payload;
     const userId = await socketIdToUserId(socket.id);
-    const serverId = payload.serverId;
     const viewChannelsPermission = await permissionToPermissionId('View Channels');
     const viewChannelPermission = await permissionToPermissionId('View Channel');
     const checkUserServerPermission = await checkServerPermission(socket.id, serverId, viewChannelsPermission._id);
@@ -44,6 +44,7 @@ exports.channelsList = async (io, socket, nameSpace) => {
         filters.push(true);
       }
       result = await list.filter((value, index) => filters[index]);
+      console.log(result);
       nameSpace.to(socket.id).emit(EventName, result);
     } else {
       nameSpace.to(socket.id).emit(EventName, []);
@@ -54,7 +55,7 @@ exports.channelsList = async (io, socket, nameSpace) => {
 exports.serversRoles = (io, socket, nameSpace) => {
   const EventName = 'serversRoles';
   const serversRoles = async (payload) => {
-    const serverId = payload.serverId;
+    const { serverId } = payload;
     const userId = await socketIdToUserId(socket.id);
     const adminstratorPermission = await permissionToPermissionId('Adminstrator');
     const manageRolesPermission = await permissionToPermissionId('Manage Roles');
@@ -73,8 +74,7 @@ exports.serversRoles = (io, socket, nameSpace) => {
 exports.usersOnChannel = (io, socket, nameSpace) => {
   const EventName = 'usersOnChannel';
   const usersOnChannel = async (payload) => {
-    const serverId = "620f481b6c23f884c0b32ffa";
-    const channeId = "620f481b6c23f884c0b32ee9";
+    const { serverId, channeId } = payload;
     const userId = await socketIdToUserId(socket.id);
     const viewChannelPermission = await permissionToPermissionId('View Channel');
     const server = await Server.findOne({ _id: serverId, users: userId });
