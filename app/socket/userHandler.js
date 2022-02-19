@@ -91,3 +91,33 @@ exports.usersOnChannel = (io, socket, nameSpace) => {
   }
   socket.on(EventName, usersOnChannel);
 }
+exports.privateMessage = (io, socket, nameSpace) => {//TODO SECURITY
+  const EventName = 'privateMessage';
+  const privateMessage = async (payload) => {
+    const { to, body } = payload;
+    const { _id: from } = await socketIdToUserId(socket.id);
+    const { socket_id } = await userIdToSocketId(to);
+    Message.create({ from, to, body });
+    nameSpace.to(socket_id).emit(EventName, payload.body);
+  }
+  socket.on(EventName, privateMessage);
+}
+exports.joinTextChannel = (io, socket, nameSpace) => {//TODO SECURITY
+  const EventName = 'joinTextChannel';
+  const joinTextChannel = async (payload) => {
+    const { channelId } = payload;
+    socket.join(channelId);
+    nameSpace.to(socket.id).emit(EventName, `you joined to ${channelId} channel`);
+  }
+  socket.on(EventName, joinTextChannel);
+}
+exports.channelMessage = (io, socket, nameSpace) => {//TODO SECURITY
+  const EventName = 'channelMessage';
+  const channelMessage = async (payload) => {
+    const { channelId, to = undefined, body } = payload;
+    const { _id: from } = await socketIdToUserId(socket.id);
+    Message.create({ channel_id: channelId, from, to, body });
+    socket.broadcast.to(channelId).emit(EventName, {from , to , body});
+  }
+  socket.on(EventName, channelMessage);
+}
