@@ -1,4 +1,4 @@
-const { serversList, channelsList, serversRoles, usersOnChannel, privateMessage, joinTextChannel , channelMessage } = require("./userHandler");
+const { serversList, channelsList, serversRoles, usersOnChannel, privateMessage, joinTextChannel, channelMessage, privateHistory } = require("./userHandler");
 const userLogIn = require("../middlewares/socket/userLogIn");
 const { Server } = require("socket.io");
 
@@ -22,6 +22,7 @@ const initialize = (server) => {
     await privateMessage(io, socket, userNamespace);
     await joinTextChannel(io, socket, userNamespace);
     await channelMessage(io, socket, userNamespace);
+    await privateHistory(io, socket, userNamespace);
   }
 
   userLogIn(io, userNamespace); // middleware

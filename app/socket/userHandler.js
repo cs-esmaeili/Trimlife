@@ -117,7 +117,26 @@ exports.channelMessage = (io, socket, nameSpace) => {//TODO SECURITY
     const { channelId, to = undefined, body } = payload;
     const { _id: from } = await socketIdToUserId(socket.id);
     Message.create({ channel_id: channelId, from, to, body });
-    socket.broadcast.to(channelId).emit(EventName, {from , to , body});
+    socket.broadcast.to(channelId).emit(EventName, { from, to, body });
   }
   socket.on(EventName, channelMessage);
+}
+exports.privateHistory = (io, socket, nameSpace) => {
+  const EventName = 'privateHistory';
+  const privateHistory = async (payload) => {
+    const { to, itemsCount, pageNumber } = payload;
+    const { _id: from } = await socketIdToUserId(socket.id);
+    const result = await Message.find({ from, to }).skip((parseInt(pageNumber) - 1) * parseInt(itemsCount)).limit(parseInt(itemsCount));
+    nameSpace.to(socket.id).emit(EventName, result);
+  }
+  socket.on(EventName, privateHistory);
+}
+exports.channelHistory = (io, socket, nameSpace) => {
+  const EventName = 'channelHistory';
+  const channelHistory = async (payload) => {
+    const { channelId, itemsCount, pageNumber } = payload;
+    const result = await Message.find({ channel_id: channelId }).skip((parseInt(pageNumber) - 1) * parseInt(itemsCount)).limit(parseInt(itemsCount));
+    nameSpace.to(socket.id).emit(EventName, result);
+  }
+  socket.on(EventName, channelHistory);
 }
