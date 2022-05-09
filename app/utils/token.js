@@ -23,3 +23,16 @@ exports.checkToken = (token) => {
         return false;
     }
 }
+exports.checkTokenWhitOutTime = (token) => {
+    const publicKey = fs.readFileSync(`${appRoot}/key/public.key`);
+    try {
+        const check = jwt.verify(token, publicKey, {
+            algorithm: "RS256",
+            ignoreExpiration: true,
+        });
+        return check;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}

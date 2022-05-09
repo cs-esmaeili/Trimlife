@@ -10,6 +10,7 @@ router.post("/login", userController.handleLogin);
 //  @desc   Login Handle
 //  @route  POST /users/register
 router.post("/register", userController.handleRegister);
+router.post("/revokeToken", userController.revokeToken);
 
 
 module.exports = router;
